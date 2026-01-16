@@ -1,6 +1,6 @@
 # Exercise 01: World Database SQL Practice
 
-- Name:
+- Name:Blessing Aganaga
 - Course: Database for Analytics
 - Module: 1
 - Database Used: World Database
@@ -25,10 +25,16 @@
 - `country.LifeExpectancy`
 
 Why were these data types selected?
+ because population is a whole-number count, while life expectancy needs decimal precision.
 
 ### Answer
-_Write your explanation here._
-
+```sql
+SHOW COLUMNS FROM country
+WHERE Field IN ('Population','LifeExpectancy');
+```
+Explanation:
+country.Population is an INT → it stores whole numbers only (no decimals). Population is counted in people, so decimals don’t make sense.
+country.LifeExpectancy is DECIMAL(3,1) → it stores decimal values with 1 digit after the decimal (example: 72.5). Life expectancy is commonly reported with decimal precision, so this data type supports that.
 ### Screenshot
 _Show the table structure or DESCRIBE output._
 
@@ -46,7 +52,12 @@ DESCRIBE country;
 Why do you think this data type was selected?
 
 ### Answer
-_Write your explanation here._
+_country.IndepYear is typically a SMALLINT (and it allows NULL).
+
+Why this was selected:
+A year value doesn’t need decimals—only a whole number (ex: 1960).
+SMALLINT uses less storage than INT and still covers common independence years.
+It allows NULL because some countries/territories may not have an independence year (or it’s unknown/not applicable).
 
 ### Screenshot
 
@@ -64,7 +75,11 @@ DESCRIBE country;
 Explain why your proposed data type might be better in some situations.
 
 ### Answer
-_Write your explanation here._
+A reasonable alternative data type is YEAR (instead of SMALLINT).
+Why YEAR might be better sometimes:
+It enforces that the value is a valid year format, which improves data quality.
+It makes the column meaning clearer (this is a year, not just any number).
+It can be easier to work with year-based functions in some MySQL setups.
 
 ---
 
