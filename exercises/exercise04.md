@@ -1,6 +1,6 @@
 # Exercise 04: Advanced SQL, Jupyter, and Visualization
 
-- Name:
+- Name:Blessing Aganaga
 - Course: Database for Analytics
 - Module:
 - Database Used: World Database
@@ -31,7 +31,17 @@ Considering the World database, write a SQL statement that will **display the na
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT 
+    c.name AS country,
+    COUNT(*) AS num_official_languages
+FROM countrylanguage cl
+JOIN country c
+  ON cl.countrycode = c.code
+WHERE cl.isofficial = 'T'
+GROUP BY c.name
+HAVING COUNT(*) > 2
+ORDER BY num_official_languages DESC;
+
 ```
 
 ### Screenshot
@@ -49,12 +59,28 @@ After the `create_engine` command is executed, **what are the three statements r
 ### Python Code
 
 ```python
-# Your three Python statements here
+# query = """
+SELECT 
+    c.name AS country,
+    COUNT(*) AS num_official_languages
+FROM countrylanguage cl
+JOIN country c
+  ON cl.countrycode = c.code
+WHERE cl.isofficial = 'T'
+GROUP BY c.name
+HAVING COUNT(*) > 2
+ORDER BY num_official_languages DESC;
+"""
+
+df_q1 = pd.read_sql(query, engine)
+
+df_q1
+
 ```
 
 ### Screenshot
 
-![Q2 Screenshot](screenshots/q2_jupyter_query_results.png)
+![Q2 Screenshot](.png)
 
 ---
 
