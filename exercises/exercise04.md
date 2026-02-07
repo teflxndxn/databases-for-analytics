@@ -59,7 +59,7 @@ After the `create_engine` command is executed, **what are the three statements r
 ### Python Code
 
 ```python
-# query = """
+query = """
 SELECT 
     c.name AS country,
     COUNT(*) AS num_official_languages
@@ -80,9 +80,11 @@ df_q1
 
 ### Screenshot
 
-![Q2 Screenshot](.png)
+![Q2 Screenshot](screenshots/q2_jupyter_query_results.png)
 
----
+
+
+
 
 ## Question 3
 
