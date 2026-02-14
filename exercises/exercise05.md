@@ -1,8 +1,8 @@
 # Exercise 05: SQLDA Database - Dates, Data Quality, Arrays, and JSON
 
-- Name:
+- Name:Blessing Aganaga
 - Course: Database for Analytics
-- Module:
+- Module:05
 - Database Used:  `sqlda` (Sample Datasets)
 - Tools Used: PostgreSQL (pgAdmin or psql)
 
@@ -42,7 +42,11 @@ year
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT DISTINCT
+    EXTRACT(YEAR FROM sent_date)::int AS year
+FROM emails
+ORDER BY year;
+
 ```
 
 ### Screenshot
@@ -65,7 +69,13 @@ count   year
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    COUNT(*) AS count,
+    EXTRACT(YEAR FROM sent_date)::int AS year
+FROM emails
+GROUP BY year
+ORDER BY year;
+
 ```
 
 ### Screenshot
@@ -86,7 +96,14 @@ Only include emails that contain **both** a sent date and an opened date.
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    sent_date,
+    opened_date,
+    opened_date - sent_date AS interval
+FROM emails
+WHERE sent_date IS NOT NULL
+  AND opened_date IS NOT NULL;
+
 ```
 
 ### Screenshot
@@ -102,7 +119,13 @@ Using the `sqlda` database, write the SQL needed to show emails that contain an 
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    email_id,
+    sent_date,
+    opened_date
+FROM emails
+WHERE opened_date < sent_date;
+
 ```
 
 ### Screenshot
@@ -119,7 +142,7 @@ After looking at the data, **why is this the case?**
 
 ### Answer
 
-_Write your explanation here._
+_This occurs because the sent date values are often set to a fixed time (such as 15:00:00), while the opened date records the actual time the email was opened. Since the timestamps may use different time conventions or standardized send times, the opened date can appear earlier than the sent_date even though the email was not actually opened before it was sent.
 
 ### Screenshot (if requested by instructor)
 
@@ -160,7 +183,7 @@ CREATE TEMP TABLE customer_dealership_distance AS (
 
 ### Answer
 
-_Write your explanation here._
+_This code creates three temporary tables to calculate the distance between customers and dealerships using geographic coordinates. The first temporary table, customer_points, selects customers who have valid longitude and latitude values and converts those coordinates into a Postgres point data type. The second temporary table, dealership_points, does the same conversion for dealership locations. The third temporary table, customer_dealership_distance, uses a CROSS JOIN to pair every customer with every dealership and then calculates the distance between their point coordinates using the <@> distance operator. Overall, the code prepares location data as points and computes the distance from each customer to every dealership for spatial analysis.
 
 ---
 
@@ -177,7 +200,12 @@ For example - dealership 1 is below:
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    dealership_id,
+    ARRAY_AGG(last_name || ',' || first_name ORDER BY last_name, first_name) AS salespeople_array
+FROM salespeople
+GROUP BY dealership_id
+ORDER BY dealership_id;
 ```
 
 ### Screenshot
@@ -202,7 +230,20 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    d.dealership_id,
+    d.state,
+    ARRAY_AGG(sp.last_name || ',' || sp.first_name
+              ORDER BY sp.last_name, sp.first_name) AS salespeople_array,
+    COUNT(sp.salesperson_id) AS number_of_salespeople
+FROM dealerships d
+JOIN salespeople sp
+  ON d.dealership_id = sp.dealership_id
+GROUP BY d.dealership_id, d.state
+ORDER BY d.state, d.dealership_id;
+
+
+
 ```
 
 ### Screenshot
@@ -218,7 +259,9 @@ Using the `sqlda` database, write the SQL needed to convert the **customers** ta
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT json_agg(row_to_json(c)) AS customers_json
+FROM customers c;
+
 ```
 
 ### Screenshot
@@ -244,7 +287,21 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT json_agg(result) AS dealership_salespeople_json
+FROM (
+    SELECT
+        d.dealership_id,
+        d.state,
+        ARRAY_AGG(sp.last_name || ',' || sp.first_name
+                  ORDER BY sp.last_name, sp.first_name) AS salespeople_array,
+        COUNT(sp.salesperson_id) AS number_of_salespeople
+    FROM dealerships d
+    JOIN salespeople sp
+        ON d.dealership_id = sp.dealership_id
+    GROUP BY d.dealership_id, d.state
+    ORDER BY d.state
+) AS result;
+
 ```
 
 ### Screenshot
