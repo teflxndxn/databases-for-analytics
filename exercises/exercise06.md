@@ -1,7 +1,7 @@
 # Module 6 - Exercise 1: Creating a Data Warehouse
 From the Operational Model to the Dimensional Model
 
-- Name:
+- Name: Blessing Aganaga
 - Course: Database for Analytics
 - Module: 6
 
@@ -107,7 +107,7 @@ Save your diagram image in this repo and embed it below.
 
 #### Diagram
 
-![Star Schema Diagram](star-schema.png)
+![Star Schema Diagram](screenshots/star-schema.png) 
 
 ---
 
@@ -121,4 +121,8 @@ In 1-2 short paragraphs, explain:
 
 #### Design Notes
 
-_Write your design notes here._
+#### Design Notes
+
+I designed a star schema centered on the Customer Sales process with a fact table named FactDailySales at the grain of daily sales. Each row in the fact table represents the total sales for a specific date, customer, and part. The fact table stores only the required measures: QuantitySold (daily total quantity) and AmountSold (daily total revenue), along with foreign keys to the Date, Customer, and Part dimensions. This follows the requirement to store aggregated daily sales rather than detailed order-level data.
+
+The dimensions I selected are DimDate, DimCustomer, and DimPart because they directly support the analytics questions in the assignment. DimDate enables analysis by day, month, quarter, and year. DimCustomer supports questions about customer spending and geographic analysis. DimPart allows analysis by product and category, such as appliance items. This design supports queries like total units of a specific part sold on a given date, how much a customer spent during a year, and total revenue for a category or time period, while avoiding unnecessary storage of orderline, order, and salesrep details as instructed.
